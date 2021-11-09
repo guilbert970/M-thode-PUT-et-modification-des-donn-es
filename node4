@@ -1,0 +1,32 @@
+const express = require('express');
+const app = express();
+const port = 3000;
+const connection = require('./conf');
+
+
+
+app.use(express.json()
+app.use(express.urlencoded({
+  extended: true
+}));
+
+
+app.put('/api/movies/:id', (req, res) => {
+  const idMovie = req.params.id;
+  const formData = req.body;
+  connection.query('UPDATE movie SET ? WHERE id = ?', [formData, idMovie], err => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("Erreur lors de la modification d'un movie");
+    } else {
+      res.sendStatus(200).send("");
+    }
+  });
+});
+
+app.listen(port, (err) => {
+    if (err) {
+      throw new Error('Somethin bad happened...')
+    }
+    console.log(`Server is listening on ${port}`)
+})
